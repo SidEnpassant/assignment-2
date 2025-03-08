@@ -1,132 +1,3 @@
-// import 'dart:math';
-// import 'package:flutter/material.dart';
-
-// class FreezeEffect extends StatefulWidget {
-//   const FreezeEffect({Key? key}) : super(key: key);
-
-//   @override
-//   State<FreezeEffect> createState() => _FreezeEffectState();
-// }
-
-// class _FreezeEffectState extends State<FreezeEffect>
-//     with SingleTickerProviderStateMixin {
-//   late AnimationController _controller;
-//   final List<LineAnimation> _lines = [];
-//   final int _lineCount = 8;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _controller = AnimationController(
-//       duration: const Duration(seconds: 2),
-//       vsync: this,
-//     )..repeat(reverse: true);
-
-//     // We'll generate the lines in the build method based on the actual size
-//   }
-
-//   void _generateLines(Size size) {
-//     // Clear existing lines
-//     _lines.clear();
-//     final random = Random();
-
-//     for (int i = 0; i < _lineCount; i++) {
-//       final startPoint = Offset(
-//         random.nextDouble() * size.width,
-//         random.nextDouble() * size.height,
-//       );
-
-//       final endPoint = Offset(
-//         random.nextDouble() * size.width,
-//         random.nextDouble() * size.height,
-//       );
-
-//       final animation = Tween<double>(begin: 0.3, end: 1.0).animate(
-//         CurvedAnimation(
-//           parent: _controller,
-//           curve: Interval(
-//             random.nextDouble() * 0.5,
-//             random.nextDouble() * 0.5 + 0.5,
-//             curve: Curves.easeInOut,
-//           ),
-//         ),
-//       );
-
-//       _lines.add(
-//         LineAnimation(
-//           startPoint: startPoint,
-//           endPoint: endPoint,
-//           animation: animation,
-//         ),
-//       );
-//     }
-//   }
-
-//   @override
-//   void dispose() {
-//     _controller.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return LayoutBuilder(
-//       builder: (context, constraints) {
-//         // Generate lines based on actual container size
-//         if (_lines.isEmpty) {
-//           _generateLines(Size(constraints.maxWidth, constraints.maxHeight));
-//         }
-
-//         return AnimatedBuilder(
-//           animation: _controller,
-//           builder: (context, _) {
-//             return CustomPaint(
-//               size: Size(constraints.maxWidth, constraints.maxHeight),
-//               painter: FrostLinePainter(lines: _lines),
-
-//             );
-//           },
-//         );
-//       },
-//     );
-//   }
-// }
-
-// class LineAnimation {
-//   final Offset startPoint;
-//   final Offset endPoint;
-//   final Animation<double> animation;
-
-//   LineAnimation({
-//     required this.startPoint,
-//     required this.endPoint,
-//     required this.animation,
-//   });
-// }
-
-// class FrostLinePainter extends CustomPainter {
-//   final List<LineAnimation> lines;
-
-//   FrostLinePainter({required this.lines});
-
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     for (var line in lines) {
-//       final paint =
-//           Paint()
-//             ..color = Colors.red.withOpacity(line.animation.value)
-//             ..strokeWidth =
-//                 1.5 // Slightly thinner lines for smaller card
-//             ..style = PaintingStyle.stroke
-//             ..strokeCap = StrokeCap.round;
-
-//       canvas.drawLine(line.startPoint, line.endPoint, paint);
-//     }
-//   }
-
-//   @override
-//   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-// }
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -143,7 +14,7 @@ class _FreezeEffectState extends State<FreezeEffect>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final List<LineSegment> _lines = [];
-  final int _lineCount = 6; // Fewer main lines to match the image
+  final int _lineCount = 6;
   ui.Image? _noiseTexture;
   bool _isTextureLoaded = false;
 
@@ -174,36 +45,31 @@ class _FreezeEffectState extends State<FreezeEffect>
     _lines.clear();
     final random = Random();
 
-    // Create fewer main lines with branches to match the image
     for (int i = 0; i < _lineCount; i++) {
-      // Create a main line that starts from an edge
       Offset startPoint;
       Offset endPoint;
 
-      // Decide which edge to start from
       int edge = random.nextInt(4);
       switch (edge) {
-        case 0: // Top edge
+        case 0:
           startPoint = Offset(random.nextDouble() * size.width, 0);
           break;
-        case 1: // Right edge
+        case 1:
           startPoint = Offset(size.width, random.nextDouble() * size.height);
           break;
-        case 2: // Bottom edge
+        case 2:
           startPoint = Offset(random.nextDouble() * size.width, size.height);
           break;
-        default: // Left edge
+        default:
           startPoint = Offset(0, random.nextDouble() * size.height);
           break;
       }
 
-      // End point is somewhere in the middle area
       endPoint = Offset(
         size.width * (0.3 + random.nextDouble() * 0.4),
         size.height * (0.3 + random.nextDouble() * 0.4),
       );
 
-      // Animation for the main line
       final mainAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
           parent: _controller,
@@ -226,10 +92,8 @@ class _FreezeEffectState extends State<FreezeEffect>
         ),
       );
 
-      // Add 2-4 branches to each main line
       int branchCount = 2 + random.nextInt(3);
       for (int j = 0; j < branchCount; j++) {
-        // Branch starts somewhere along the main line
         double t =
             0.3 + random.nextDouble() * 0.6; // Position along the main line
         Offset branchStart = Offset(
@@ -237,7 +101,6 @@ class _FreezeEffectState extends State<FreezeEffect>
           startPoint.dy + (endPoint.dy - startPoint.dy) * t,
         );
 
-        // Branch extends in a somewhat random direction
         double angle = random.nextDouble() * pi - pi / 2; // -90 to 90 degrees
         double length = size.width * (0.1 + random.nextDouble() * 0.2);
 
@@ -246,19 +109,17 @@ class _FreezeEffectState extends State<FreezeEffect>
           branchStart.dy + sin(angle) * length,
         );
 
-        // Animation for the branch starts slightly after the main line
         final branchAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
           CurvedAnimation(
             parent: _controller,
             curve: Interval(
-              0.2 + t * 0.3, // Starts later depending on position
+              0.2 + t * 0.3,
               0.7 + random.nextDouble() * 0.3,
               curve: Curves.easeOut,
             ),
           ),
         );
 
-        // Add the branch
         _lines.add(
           LineSegment(
             startPoint: branchStart,

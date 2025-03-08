@@ -19,14 +19,12 @@ class AppProvider extends ChangeNotifier {
   void _generateCardDetails() {
     final faker = Faker();
 
-    // Generate card number in groups of 4 digits
     _cardNumber =
         '${faker.randomGenerator.integer(9999, min: 1000)} '
         '${faker.randomGenerator.integer(9999, min: 1000)} '
         '${faker.randomGenerator.integer(9999, min: 1000)} '
         '${faker.randomGenerator.integer(9999, min: 1000)}';
 
-    // Generate expiry date (MM/YY format)
     final month = faker.randomGenerator
         .integer(12, min: 1)
         .toString()
@@ -34,7 +32,6 @@ class AppProvider extends ChangeNotifier {
     final year = (faker.randomGenerator.integer(5, min: 1) + 28).toString();
     _expiryDate = '$month/$year';
 
-    // Generate CVV
     _cvv = faker.randomGenerator.integer(999, min: 100).toString();
 
     notifyListeners();

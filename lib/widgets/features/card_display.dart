@@ -25,7 +25,6 @@ class CardDisplay extends StatelessWidget {
         Expanded(
           child: AspectRatio(
             aspectRatio: 0.70,
-            //0.65, // Increased aspect ratio to make card smaller/shorter
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
@@ -135,7 +134,6 @@ class CardDisplay extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 25),
-          // Copy details directly below the card number
           Row(
             children: [
               GestureDetector(
@@ -160,7 +158,6 @@ class CardDisplay extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // RuPay logo at bottom with PREPAID below it
           Align(
             alignment: Alignment.centerRight,
             child: Column(
@@ -208,9 +205,9 @@ class CardDisplay extends StatelessWidget {
                 numbers[i],
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 16, // Smaller font
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: 3, // Slightly reduced letter spacing
+                  letterSpacing: 3,
                 ),
               ),
             ),
